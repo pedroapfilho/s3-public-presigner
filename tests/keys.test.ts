@@ -13,4 +13,13 @@ describe('keyFromPathname', () => {
   test('returns empty string for root', () => {
     expect(keyFromPathname('/')).toBe('')
   })
+
+  test('decodes percent-escaped UTF-8 bytes', () => {
+    expect(keyFromPathname('/sal%C3%A3o.jpg')).toBe('salão.jpg')
+    expect(keyFromPathname('/C%C3%B3pia/foo.jpg')).toBe('Cópia/foo.jpg')
+  })
+
+  test('falls back to the raw path on malformed percent escapes', () => {
+    expect(keyFromPathname('/100%-off.jpg')).toBe('100%-off.jpg')
+  })
 })
